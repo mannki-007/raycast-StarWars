@@ -1,8 +1,6 @@
 # raycast-StarWars
 
-
-https://youtu.be/7wTvalX8vyU
-
+[![Demo Video](https://img.youtube.com/vi/7wTvalX8vyU/0.jpg)]
 
 <img width="1308" height="834" alt="изображение" src="https://github.com/user-attachments/assets/4f19e480-5039-4aa9-9329-bbb45928230a" />
 
