@@ -1,6 +1,7 @@
 # raycast-StarWars
 
-<img width="1286" height="810" alt="изображение" src="https://github.com/user-attachments/assets/a19e797e-8b3c-439b-9485-224e8b142652" />
+<img width="1308" height="834" alt="изображение" src="https://github.com/user-attachments/assets/4f19e480-5039-4aa9-9329-bbb45928230a" />
+
 
 
 
@@ -11,8 +12,8 @@
     - P	Toggle FPS display
     - M	Toggle mini map
 # to-do
-    - Add textures
-    - Change raycast method to DDA
+    - Add textures(✔)
+    - Change raycast method to DDA(next)
     - Add sprites
     - Make larger map
     - Make Hud (health, ammo, level)
