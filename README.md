@@ -12,8 +12,8 @@
     - M	Toggle mini map
 # to-do
     - Add textures
-    - Change raycast metod to DDA
+    - Change raycast method to DDA
     - Add sprites
     - Make larger map
-    - Make Hud
+    - Make Hud (health, ammo, level)
     - Make guns 
