@@ -1,3 +1,7 @@
+// https://github.com/mannki-007/raycast-StarWars/tree/main
+
+
+
 // инклюды
 
 
@@ -9,9 +13,12 @@
 
 
 // функция по нахождению дистанции между стенами и игроком
-void findWallDistance(float startX, float startY, float dirX, float dirY, int gamemap[8][12], float &distance, int &wallType) {
+void findWallDistance(float startX, float startY, float dirX, float dirY, int gamemap[8][12], float &distance, int &wallType, int &side) {
     float x = startX;
     float y = startY;
+
+    int prevCellX = (int)x;
+    int prevCellY = (int)y;
     
     for (int step = 0; step < 200; step++) {
         x += dirX * 0.1f;
@@ -19,28 +26,40 @@ void findWallDistance(float startX, float startY, float dirX, float dirY, int ga
         
         int cellX = (int)x;
         int cellY = (int)y;
+
     
         if (cellX >= 0 && cellX < 12 && cellY >= 0 && cellY < 8) {
             if (gamemap[cellY][cellX] > 0) {
                 distance = step * 0.1f;
                 wallType = gamemap[cellY][cellX];
+                
+
+                if (cellX != prevCellX) {
+                    side = 0;
+                } else {
+                    side = 1;
+                }
                 return;
             }
-        } 
+        }
+        prevCellX = cellX;
+        prevCellY = cellY; 
     }
+
     
     distance = 100.0f;
     wallType = 0;
+    side = 0;
 }
 
 int main() {
     int gamemap[8][12] = {
         {4,4,4,4,4,4,4,4,4,4,4,4},
-        {4,0,2,3,0,0,0,0,0,0,0,4},
-        {4,0,0,3,0,0,0,0,0,1,0,4},
-        {4,0,0,0,0,0,2,0,0,1,0,4},
-        {4,0,0,0,3,0,2,0,0,0,0,4},
-        {4,2,0,0,2,0,3,0,0,0,0,4},
+        {4,0,1,1,0,0,0,0,0,0,0,4},
+        {4,0,0,1,0,0,0,0,0,1,0,4},
+        {4,0,0,0,0,0,1,0,0,1,0,4},
+        {4,0,0,0,1,0,1,0,0,0,0,4},
+        {4,1,0,0,1,0,1,0,0,0,0,4},
         {4,0,0,0,0,0,0,0,0,0,0,4},
         {4,4,4,4,4,4,4,4,4,4,4,4}
     };
@@ -54,6 +73,13 @@ int main() {
     wallColor[2] = sf::Color::Red;
     wallColor[3] = sf::Color::Green;
     wallColor[4] = sf::Color(129, 189, 32);
+
+
+    sf::Texture wallTexture;
+    wallTexture.loadFromFile("textures/metallWall.png");
+    int textureWidth = wallTexture.getSize().x;   // 128x
+    int textureHeight = wallTexture.getSize().y;  // 128y
+
 
     float posX = 1.5f;
     float posY = 1.5f;
@@ -85,7 +111,6 @@ int main() {
         dirY = sin(angle);
         planeX = -dirY * 0.66f;
         planeY = dirX * 0.66f;
-        float moveSpeed = 0.1f;
         float rotSpeed = 0.05f;
         static bool btnPresd = false;
         float deltaTime = deltaClock.restart().asSeconds();
@@ -106,18 +131,13 @@ int main() {
         }
         btnMPresd = btnMIsPresd;
 
-        float baseMoveSpeed = 3.0f;  
-        float currentMoveSpeed = baseMoveSpeed;
-        float moveSpeedPerSecond = 3.0f;  
-        float actualMoveSpeed = moveSpeedPerSecond * deltaTime;  
-        float moveThisFrame = currentMoveSpeed * deltaTime;
-
+        float speed = 3.0f * deltaTime;
 
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-            moveSpeedPerSecond += 0.15f;
+           speed *= 1.3f;
         } else {
-            moveSpeedPerSecond += 0.0f;
+           speed = 3.0f * deltaTime;
         
     }
 
@@ -127,8 +147,8 @@ int main() {
 
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            float newX = posX + dirX * actualMoveSpeed;
-            float newY = posY + dirY * actualMoveSpeed;
+            float newX =  posX + dirX * speed;
+            float newY =  posY + dirY * speed;
     
     // Сдвигаем точку проверки НА 0.2 от стены
             float checkX = newX + dirX * 0.4f;
@@ -143,8 +163,8 @@ int main() {
         float rightY = dirX;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            float newX = posX - rightX * moveThisFrame;;
-            float newY = posY - rightY * moveThisFrame;;
+            float newX = posX - rightX * speed;
+            float newY = posY - rightY * speed; 
 
             float checkX = newX - rightX * 0.4f;
             float checkY = newY - rightY * 0.4f;
@@ -156,8 +176,8 @@ int main() {
         }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            float newX = posX + rightX * moveThisFrame;;
-            float newY = posY + rightY * moveThisFrame;;
+            float newX = posX + rightX * speed;
+            float newY = posY + rightY * speed; 
 
             float checkX = newX + rightX * 0.4f;
             float checkY = newY + rightY * 0.4f;
@@ -175,9 +195,8 @@ int main() {
 
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            float newX = posX - dirX * actualMoveSpeed;
-            float newY = posY - dirY * actualMoveSpeed;
-    
+            float newX =  posX - dirX * speed;
+            float newY =  posY - dirY * speed;
     // Сдвигаем точку проверки НА 0.2 от стены
             float checkX = newX - dirX * 0.4f;
             float checkY = newY - dirY * 0.4f;
@@ -197,10 +216,10 @@ int main() {
             }
         
 
-        sf::RectangleShape floor(sf::Vector2f(1280,384));
-        floor.setPosition(0,384);
-        floor.setFillColor(sf::Color(192,192,192));
-        window.draw(floor);
+        sf::RectangleShape ground(sf::Vector2f(1280,384));
+        ground.setPosition(0,384);
+        ground.setFillColor(sf::Color(192,192,192));
+        window.draw(ground);
         
         sf::RectangleShape potolok(sf::Vector2f(1280,384));
         potolok.setPosition(0,0);
@@ -213,8 +232,8 @@ int main() {
 
 
 
-
-
+        sf::VertexArray walls(sf::Quads);
+        
         for (int x = 0; x < 1280; x++) {
             // направление луча
             float cameraX = 2.0f * x / 1280.0f - 1.0f;
@@ -224,8 +243,22 @@ int main() {
             //  находим стену
             float distance;
             int wallType;
-            findWallDistance(posX, posY, rayDirX, rayDirY, gamemap, distance, wallType);
+            int side = 0; // 0 sever/ug 1 zapad/vostok
+            findWallDistance(posX, posY, rayDirX, rayDirY, gamemap, distance, wallType, side);
             
+            float hitX = posX + distance * rayDirX;
+            float hitY = posY + distance * rayDirY;
+
+
+            float wallX;
+            if (side == 0) wallX = hitY - floor(hitY);
+            else wallX = hitX - floor(hitX);
+
+
+
+
+
+
             //  вычисляем высоту стены
             float lineHeight = 768.0f / (distance + 0.0001f);  // +0.0001 чтобы не делить на 0
             if (lineHeight > 768.0f) lineHeight =  768.0f;  // ограничиваем
@@ -272,15 +305,47 @@ int main() {
                     sf::Vertex(sf::Vector2f(x, drawStart+2), sf::Color::Black),
                     sf::Vertex(sf::Vector2f(x, drawStart), sf::Color::Black)
                 };
+                int textureX = (int)(wallX * textureWidth);
+                
+                if (textureX < 0) textureX = 0;
+                if (textureX >= textureWidth) textureX = textureWidth - 1;
+                
+                float texU = wallX * textureWidth;
+                
+                
+                sf::Vertex v0; // вверх левый
+                v0.position = sf::Vector2f(x, drawStart);                           
+                v0.texCoords = sf::Vector2f(texU, 0);               
+                walls.append(v0);
+        
+          
+                sf::Vertex v1; // верх правый
+                v1.position = sf::Vector2f(x + 1, drawStart);      
+                v1.texCoords = sf::Vector2f(texU, 0);               
+                walls.append(v1);
+        
+           
+                sf::Vertex v2; // низ правый край
+                v2.position = sf::Vector2f(x + 1, drawEnd);          
+                v2.texCoords = sf::Vector2f(texU, textureHeight);   
+                walls.append(v2);
+        
+       
+                sf::Vertex v3; // низ левый край
+                v3.position = sf::Vector2f(x, drawEnd);             
+                v3.texCoords = sf::Vector2f(texU, textureHeight);   
+                walls.append(v3);
+                window.draw(walls, &wallTexture);
+
+                sf::Color wallBrightness(255 * brigtness, 255 * brigtness, 255 * brigtness);
+                v0.color = wallBrightness;
+                v1.color = wallBrightness;
+                v2.color = wallBrightness;
+                v3.color = wallBrightness;
 
 
 
 
-
-
-                window.draw(Wall, 2, sf::Lines);
-                window.draw(bottomEdge, 2, sf::Lines);
-                window.draw(upEdge, 2, sf::Lines);
             }   
 
 
