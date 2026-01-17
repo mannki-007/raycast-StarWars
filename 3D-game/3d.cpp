@@ -13,44 +13,65 @@
 
 
 // функция по нахождению дистанции между стенами и игроком
-void findWallDistance(float startX, float startY, float dirX, float dirY, int gamemap[8][12], float &distance, int &wallType, int &side) {
-    float x = startX;
-    float y = startY;
-
-    int prevCellX = (int)x;
-    int prevCellY = (int)y;
+void findWallDistance(float startX, float startY, float rayDirX, float rayDirY, int gamemap[8][12], float &distance, int &wallType, int &side) {
     
-    for (int step = 0; step < 200; step++) {
-        x += dirX * 0.1f;
-        y += dirY * 0.1f;
+    bool hit = false;
+    int mapX = (int)startX;
+    int mapY = (int)startY;
+    float deltaDistX = (rayDirX == 0) ? 1e30f : fabsf(1.0f / rayDirX);
+    float deltaDistY = (rayDirY == 0) ? 1e30f : fabsf(1.0f / rayDirY);
+    float sideDistX,sideDistY;
+    side = 0;
+    int stepX;
+    int stepY;
+    int steps = 0;
+
+    if (rayDirX > 0) {
+        stepX = 1;
+        sideDistX = (mapX + 1.0f - startX) * deltaDistX;
+    } else {
+        stepX = -1;
+        sideDistX = (startX - mapX) * deltaDistX; 
         
-        int cellX = (int)x;
-        int cellY = (int)y;
-
-    
-        if (cellX >= 0 && cellX < 12 && cellY >= 0 && cellY < 8) {
-            if (gamemap[cellY][cellX] > 0) {
-                distance = step * 0.1f;
-                wallType = gamemap[cellY][cellX];
-                
-
-                if (cellX != prevCellX) {
-                    side = 0;
-                } else {
-                    side = 1;
-                }
-                return;
-            }
-        }
-        prevCellX = cellX;
-        prevCellY = cellY; 
     }
 
-    
-    distance = 100.0f;
-    wallType = 0;
-    side = 0;
-}
+    if (rayDirY > 0) {
+        stepY = 1;
+        sideDistY = (mapY + 1.0f - startY) * deltaDistY;
+    } else {
+        stepY = -1;
+        sideDistY = (startY - mapY) * deltaDistY;
+    }
+
+    while(!hit && steps < 1000) {
+        steps++;
+        if (sideDistX < sideDistY) {
+            sideDistX += deltaDistX;
+            mapX += stepX;
+            side = 0;
+
+        } else {
+            sideDistY += deltaDistY;
+            mapY += stepY;
+            side = 1;
+        }
+        if (mapX >= 0 && mapX < 12 && mapY >= 0 && mapY < 8) {
+            if (gamemap[mapY][mapX] > 0) {
+            hit = true;
+            wallType = gamemap[mapY][mapX];
+        }
+        } else {
+        hit = true;  // за картoй
+            }
+        }
+    if (side == 0) {
+        distance = (mapX - startX + (1 - stepX) / 2.0f) / rayDirX;
+    } else {
+        distance = (mapY - startY + (1 - stepY) / 2.0f) / rayDirY;
+    }
+
+    }
+
 
 int main() {
     int gamemap[8][12] = {
@@ -150,7 +171,7 @@ int main() {
             float newX =  posX + dirX * speed;
             float newY =  posY + dirY * speed;
     
-    // Сдвигаем точку проверки НА 0.2 от стены
+
             float checkX = newX + dirX * 0.4f;
             float checkY = newY + dirY * 0.4f;
     
@@ -197,7 +218,7 @@ int main() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             float newX =  posX - dirX * speed;
             float newY =  posY - dirY * speed;
-    // Сдвигаем точку проверки НА 0.2 от стены
+
             float checkX = newX - dirX * 0.4f;
             float checkY = newY - dirY * 0.4f;
     
@@ -220,7 +241,7 @@ int main() {
         ground.setPosition(0,384);
         ground.setFillColor(sf::Color(192,192,192));
         window.draw(ground);
-        
+       
         sf::RectangleShape potolok(sf::Vector2f(1280,384));
         potolok.setPosition(0,0);
         potolok.setFillColor(sf::Color(28, 170, 214));
@@ -231,12 +252,11 @@ int main() {
 
 
 
-
         sf::VertexArray walls(sf::Quads);
         
         for (int x = 0; x < 1280; x++) {
             // направление луча
-            float cameraX = 2.0f * x / 1280.0f - 1.0f;
+            float cameraX = 2 * x / 1280.0f - 1;
             float rayDirX = dirX + planeX * cameraX;
             float rayDirY = dirY + planeY * cameraX;
             
@@ -254,7 +274,7 @@ int main() {
             if (side == 0) wallX = hitY - floor(hitY);
             else wallX = hitX - floor(hitX);
 
-
+            printf("1");
 
 
 
