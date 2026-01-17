@@ -14,6 +14,7 @@ https://www.youtube.com/watch?v=UQQ41qwrbMU
     - P	Toggle FPS display
     - M	Toggle mini map
 # to-do
+    - Rewrite engine with 0% AI Help 
     - Add textures(✔)
     - Change raycast method to DDA(✔)
     - Optimization(✔?? now 30fps but locked)
