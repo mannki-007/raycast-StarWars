@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
-
+#include <iostream>
 
 
 
@@ -75,25 +75,23 @@ void findWallDistance(float startX, float startY, float rayDirX, float rayDirY, 
 
 int main() {
     int gamemap[8][12] = {
-        {4,4,4,4,4,4,4,4,4,4,4,4},
-        {4,0,1,1,0,0,0,0,0,0,0,4},
-        {4,0,0,1,0,0,0,0,0,1,0,4},
-        {4,0,0,0,0,0,1,0,0,1,0,4},
-        {4,0,0,0,1,0,1,0,0,0,0,4},
-        {4,1,0,0,1,0,1,0,0,0,0,4},
-        {4,0,0,0,0,0,0,0,0,0,0,4},
-        {4,4,4,4,4,4,4,4,4,4,4,4}
+        {1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,1,1,0,0,0,0,0,0,0,1},
+        {1,0,0,1,0,0,0,0,0,1,0,1},
+        {1,0,0,0,0,0,1,0,0,1,0,1},
+        {1,0,2,0,1,0,1,0,0,0,0,1},
+        {1,1,0,0,1,0,1,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1}
     };
-    sf::Color rainbowTex [3] = {sf::Color::Yellow, sf::Color::Red, sf::Color::White};
     sf::Font font;
     font.loadFromFile("font.ttf");
 
-    sf::Color wallColor[5];
+    sf::Color wallColor[3];
     wallColor[0] = sf::Color::Black;
     wallColor[1] = sf::Color::White;
-    wallColor[2] = sf::Color::Red;
-    wallColor[3] = sf::Color::Green;
-    wallColor[4] = sf::Color(129, 189, 32);
+    wallColor[2] = sf::Color(129, 189, 32);
+
 
 
     sf::Texture wallTexture;
@@ -172,8 +170,8 @@ int main() {
             float newY =  posY + dirY * speed;
     
 
-            float checkX = newX + dirX * 0.4f;
-            float checkY = newY + dirY * 0.4f;
+            float checkX = newX + dirX * 0.6f;
+            float checkY = newY + dirY * 0.6f;
     
             if(gamemap[(int)checkY][(int)checkX] == 0) {
                 posX = newX;
@@ -219,8 +217,8 @@ int main() {
             float newX =  posX - dirX * speed;
             float newY =  posY - dirY * speed;
 
-            float checkX = newX - dirX * 0.4f;
-            float checkY = newY - dirY * 0.4f;
+            float checkX = newX - dirX * 0.6f;
+            float checkY = newY - dirY * 0.6f;
     
             if(gamemap[(int)checkY][(int)checkX] == 0) {
                 posX = newX;
@@ -252,7 +250,11 @@ int main() {
 
 
 
+        
         sf::VertexArray walls(sf::Quads);
+        walls.clear();  // Очистить старые данные
+        walls.resize(1280 * 4);  // Выделить память заново
+
         
         for (int x = 0; x < 1280; x++) {
             // направление луча
@@ -274,18 +276,25 @@ int main() {
             if (side == 0) wallX = hitY - floor(hitY);
             else wallX = hitX - floor(hitX);
 
-            printf("1");
-
+            if (distance < 0.4f) distance = 0.4f;
 
 
 
             //  вычисляем высоту стены
-            float lineHeight = 768.0f / (distance + 0.0001f);  // +0.0001 чтобы не делить на 0
-            if (lineHeight > 768.0f) lineHeight =  768.0f;  // ограничиваем
-            
-            float drawStart = 384.0f - lineHeight / 2.0f;
+            float lineHeight = 768.0f / (distance + 0.05f);
+            float maxHeight = 1536.0f;  
+
+            if (lineHeight > maxHeight) {
+                lineHeight = maxHeight;
+            }
+
+
+            float drawStart = 384.0f - lineHeight / 2.0f; 
             float drawEnd = 384.0f + lineHeight / 2.0f;
-            int texIndex = x % 3;
+        
+
+            if (drawStart < 0) drawStart = 0; // ограничение с 0
+            if (drawEnd > 768) drawEnd = 768; // ограничение до 768
 
 
 
@@ -294,7 +303,7 @@ int main() {
             if (distance > 0.3f) {
                 brigtness = 1.0 - (distance - 2.0f) * 0.4f; 
                 if (brigtness > 1.0f) brigtness = 1.0f; // ограничиваем значения яркости
-                if (brigtness < 0.8f) brigtness = 0.8f;
+                if (brigtness < 0.6f) brigtness = 0.6f;
             }
             sf::Color originalColor = wallColor[wallType]; // яркость равняется типу стен
 
@@ -307,71 +316,61 @@ int main() {
             );
 
 
-            if (distance < 200.0f) {
-                float lineHeight = 1024.0f / (distance + 0.001f);
-                float drawStart = 384.0f - lineHeight/2.0f;
-                float drawEnd = 384.0f + lineHeight/2.0f;
+            
 
-                sf::Vertex Wall[2] = { 
-
-                    sf::Vertex(sf::Vector2f(x, drawStart+2), shadowColor),
-                    sf::Vertex(sf::Vector2f(x, drawEnd-2), shadowColor)
-            };
-                sf::Vertex bottomEdge[2] {
-                    sf::Vertex(sf::Vector2f(x, drawEnd-2), sf::Color::Black),
-                    sf::Vertex(sf::Vector2f(x, drawEnd), sf::Color::Black)
-                };
-                sf::Vertex upEdge[2] {
-                    sf::Vertex(sf::Vector2f(x, drawStart+2), sf::Color::Black),
-                    sf::Vertex(sf::Vector2f(x, drawStart), sf::Color::Black)
-                };
                 int textureX = (int)(wallX * textureWidth);
                 
                 if (textureX < 0) textureX = 0;
                 if (textureX >= textureWidth) textureX = textureWidth - 1;
                 
+                
+            
+                
+
+
                 float texU = wallX * textureWidth;
-                
-                
-                sf::Vertex v0; // вверх левый
-                v0.position = sf::Vector2f(x, drawStart);                           
-                v0.texCoords = sf::Vector2f(texU, 0);               
+                if (texU < 1.0f) texU = 1.0f;  
+                if (texU > textureWidth - 2.0f) texU = textureWidth - 2.0f;  
+                sf::Vertex v0, v1, v2, v3;
+            
+                v0.position = sf::Vector2f(x, drawStart);
+                v1.position = sf::Vector2f(x + 1, drawStart);
+                v2.position = sf::Vector2f(x + 1, drawEnd);
+                v3.position = sf::Vector2f(x, drawEnd);
+    
+                float texTop = 0;
+                float texBottom = textureHeight;
+
+
+                if (lineHeight > 768.0f) {
+                    float scale = 768.0f / lineHeight;
+                    texTop = textureHeight * (1.0f - scale) / 2.0f;
+                    texBottom = textureHeight - texTop;
+}
+
+                v0.texCoords = sf::Vector2f(texU, texTop);
+                v1.texCoords = sf::Vector2f(texU + 1.0f, texTop);
+                v2.texCoords = sf::Vector2f(texU + 1.0f, texBottom);
+                v3.texCoords = sf::Vector2f(texU, texBottom);
+    
+                v0.color = shadowColor;
+                v1.color = shadowColor;
+                v2.color = shadowColor;
+                v3.color = shadowColor;
+    
                 walls.append(v0);
-        
-          
-                sf::Vertex v1; // верх правый
-                v1.position = sf::Vector2f(x + 1, drawStart);      
-                v1.texCoords = sf::Vector2f(texU, 0);               
                 walls.append(v1);
-        
-           
-                sf::Vertex v2; // низ правый край
-                v2.position = sf::Vector2f(x + 1, drawEnd);          
-                v2.texCoords = sf::Vector2f(texU, textureHeight);   
                 walls.append(v2);
-        
-       
-                sf::Vertex v3; // низ левый край
-                v3.position = sf::Vector2f(x, drawEnd);             
-                v3.texCoords = sf::Vector2f(texU, textureHeight);   
                 walls.append(v3);
-                window.draw(walls, &wallTexture);
-
-                sf::Color wallBrightness(255 * brigtness, 255 * brigtness, 255 * brigtness);
-                v0.color = wallBrightness;
-                v1.color = wallBrightness;
-                v2.color = wallBrightness;
-                v3.color = wallBrightness;
-
 
 
 
             }   
 
+        window.draw(walls, &wallTexture);
 
-        }
-
-
+        
+        
         int mapScale = 10;
         int mapX = 10;
         int mapY = 20;
@@ -426,12 +425,13 @@ int main() {
             text.setString("FPS: " + std::to_string(fps));
             text.setPosition(1024, 5);
             window.draw(text);
+        
+
         }
-
-
 
         window.display();
     }
     
     return 0;
+    
 }
