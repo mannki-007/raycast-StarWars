@@ -21,6 +21,3 @@ https://youtu.be/7wTvalX8vyU
     - Make larger map
     - Make Hud (health, ammo, level)
     - Make guns 
-# about me
-    - 14 years
-    - Russia
