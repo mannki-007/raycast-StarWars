@@ -16,7 +16,7 @@ https://www.youtube.com/watch?v=UQQ41qwrbMU
 # to-do
     - Add textures(✔)
     - Change raycast method to DDA(✔)
-    - Optimization(✔??)
+    - Optimization(✔?? now 30fps but locked)
     - Fix bug when you so clode to a wall(next)
     - Add sprites
     - Make larger map
