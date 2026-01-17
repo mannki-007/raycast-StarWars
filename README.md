@@ -14,11 +14,9 @@ https://www.youtube.com/watch?v=UQQ41qwrbMU
     - P	Toggle FPS display
     - M	Toggle mini map
 # to-do
-    - Rewrite engine with 0% AI Help 
-    - Add textures(✔)
-    - Change raycast method to DDA(✔)
-    - Optimization(✔?? now 30fps but locked)
-    - Fix bug when you so clode to a wall(next)
+    - Rewrite engine with 0% AI help
+    - Add textures
+    - Add toggle textures like a door or smthg
     - Add sprites
     - Make larger map
     - Make Hud (health, ammo, level)
