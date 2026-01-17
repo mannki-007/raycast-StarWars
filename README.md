@@ -1,7 +1,8 @@
 # raycast-StarWars
-# intoduce video
-https://youtu.be/7wTvalX8vyU
-<img width="1308" height="834" alt="изображение" src="https://github.com/user-attachments/assets/4f19e480-5039-4aa9-9329-bbb45928230a" />
+# intoduce video old
+https://youtu.be/7wTvalX8vyU 
+<img width="1308" height="834" alt="изображение" src="https://github.com/user-attachments/assets/55d66246-0f8c-4bd6-9e87-f4d0d4884841" />
+
 
 
 
@@ -14,7 +15,8 @@ https://youtu.be/7wTvalX8vyU
     - M	Toggle mini map
 # to-do
     - Add textures(✔)
-    - Change raycast method to DDA(next)
+    - Change raycast method to DDA(✔)
+    - Optimization(next, need to search reason why i have 20fps)
     - Add sprites
     - Make larger map
     - Make Hud (health, ammo, level)
