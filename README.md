@@ -1,7 +1,8 @@
 # raycast-StarWars
-# intoduce video 
-https://www.youtube.com/watch?v=UQQ41qwrbMU
-<img width="1308" height="834" alt="изображение" src="https://github.com/user-attachments/assets/55d66246-0f8c-4bd6-9e87-f4d0d4884841" />
+<img width="1510" height="804" alt="изображение" src="https://github.com/user-attachments/assets/78b82523-8a86-47fe-ab9c-f8feee77ca4e" />
+
+
+
 
 
 
@@ -14,10 +15,14 @@ https://www.youtube.com/watch?v=UQQ41qwrbMU
     - P	Toggle FPS display
     - M	Toggle mini map
 # to-do
-    - Rewrite engine with 0% AI help
-    - Add textures
-    - Add toggle textures like a door or smthg
-    - Add sprites
-    - Make larger map
+    - Rewrite engine with 0% AI help(✔ 50/50)
+    - Add floor()
+    - Add sky()
+    - Add textures()
+    - Add toggle textures like a door or smthg)_
+    - Add sprites()
+    - Make larger map()
     - Make Hud (health, ammo, level)
-    - Make guns 
+    - Make guns()
+# REMEBER
+    - Do not use a AI
