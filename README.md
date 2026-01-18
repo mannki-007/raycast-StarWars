@@ -9,11 +9,10 @@
 
 
 # movement
-    - W/A/S/D	Move forward/left/backward/right
-    - K/L	Rotate camera left/right
-    - Shift	Sprint (hold)
-    - P	Toggle FPS display
-    - M	Toggle mini map
+    - W/A/S/D	Move forward/backward Rotate camera left/rightt
+    - Shift	Sprint (hold) (Soon)
+    - P	Toggle FPS display (Soon)
+    - M	Toggle mini map (Soon)
 # to-do
     - Rewrite engine with 0% AI help(✔ 50/50)
     - Add floor()
