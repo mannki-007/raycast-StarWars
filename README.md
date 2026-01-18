@@ -9,7 +9,8 @@
 
 
 # movement
-    - W/A/S/D	Move forward/backward Rotate camera left/rightt
+    - W/A/S/D Move forward/backward/left/right
+    - K/L Rotate camera left/rightt
     - Shift	Sprint (hold) (Soon)
     - P	Toggle FPS display (Soon)
     - M	Toggle mini map (Soon)
